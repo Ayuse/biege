@@ -61,17 +61,18 @@
       );
 
       // Logic
-      if ( webflowDoc.hasAttribute('true') )
-      {
+      if (webflowDoc.hasAttribute('true')) {
         // Elements
-        const h1 = document.querySelector('h1')
+        const h1 = document.querySelector('h1');
 
-        // Values 
-        const url = `${ webflowDocUrl }?w_io=${ 'https://bmg.studio/get-started/' }&h_url=${ jsSrc }&d_title=${ document.title }`
+        // Values
+        const url = `${webflowDocUrl}?w_io=${'https://bmg.studio/get-started/'}&h_url=${jsSrc}&d_title=${
+          document.title
+        }`;
 
         // Actions
-        h1.innerText = 'Redirecting...'
-        window.location.href = url
+        h1.innerText = 'Redirecting...';
+        window.location.href = url;
       }
     </script>
   </body>
