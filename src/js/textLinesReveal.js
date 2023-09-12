@@ -35,9 +35,13 @@ export class TextLinesReveal {
     gsap.killTweensOf(this.lines);
     return gsap
       .timeline({ defaults: { duration: 1.2, ease: 'expo' } })
+
       .set(this.lines, {
         y: '150%',
         rotate: 5,
+      })
+      .set(['.header', '.paragraph'], {
+        opacity: 1,
       })
       .to(this.lines, {
         y: '0%',

@@ -22,9 +22,27 @@ loaderTl
   //   })
   .add(() => {
     // Hide grid texts
+    setTimeout(() => {
+      document
+        .querySelectorAll(' path,  line,  polyline')
+        .forEach(p => tween(p));
+      console.log(' path,  line,  polyline');
+    }, 1000);
+  })
+  .to(
+    '#ajaxContent',
+    {
+      opacity: 0,
+      delay: 4,
+      duration: 1.5,
+    },
+    '>'
+  )
+  .add(() => {
+    // Hide grid texts
     new TextLinesReveal(document.querySelectorAll('.header')).in();
     new TextLinesReveal(document.querySelectorAll('.paragraph')).in();
-  }, '>')
+  }, '5')
   .to(
     '.hero-image_wrapper',
     {
@@ -33,39 +51,51 @@ loaderTl
       ease: 'power4.easeInOut',
       delay: 0.5,
     },
-    '>'
+    '5'
   );
 console.log('wire');
 
-//include HTML
-function includeHTML() {
-  var z, i, elmnt, file, xhttp;
-  /* Loop through a collection of all HTML elements: */
-  z = document.getElementsByTagName('*');
-  for (i = 0; i < z.length; i++) {
-    elmnt = z[i];
-    /*search for elements with a certain atrribute:*/
-    file = elmnt.getAttribute('w3-include-html');
-    if (file) {
-      /* Make an HTTP request using the attribute value as the file name: */
-      xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function () {
-        if (this.readyState == 4) {
-          if (this.status == 200) {
-            elmnt.innerHTML = this.responseText;
-          }
-          if (this.status == 404) {
-            elmnt.innerHTML = 'Page not found.';
-          }
-          /* Remove the attribute, and call this function once more: */
-          elmnt.removeAttribute('w3-include-html');
-          includeHTML();
-        }
-      };
-      xhttp.open('GET', file, true);
-      xhttp.send();
-      /* Exit the function: */
-      return;
+const tl = gsap.timeline({
+  id: 'Timeline',
+  // repeat: -1,
+  repeatDelay: 1.5,
+});
+
+const colors = ['#FFFFFF', '#000000'];
+
+function tween(node) {
+  let path = node;
+  const delay = Math.random() * 3;
+  const length = path.getTotalLength();
+  colors.forEach((color, index) => {
+    if (index !== 0) {
+      path = path.cloneNode();
+      node.parentNode.appendChild(path);
     }
-  }
+    path.setAttribute('stroke', color);
+
+    tl.set(
+      path,
+      {
+        strokeDasharray: length + 0.5,
+        strokeDashoffset: length + 0.6,
+        autoRound: false,
+      },
+      0
+    );
+
+    tl.to(
+      path,
+      {
+        strokeDashoffset: 0,
+        autoRound: false,
+        duration: 1.2,
+        // ease: "power3.out",
+      },
+      index * 0.25 + delay
+    );
+  });
 }
+
+document.querySelectorAll(' path,  line,  polyline').forEach(p => tween(p));
+console.log(document.querySelectorAll('#ajaxContent')[0].children);
