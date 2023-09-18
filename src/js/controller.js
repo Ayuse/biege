@@ -1,5 +1,12 @@
 import { TextLinesReveal } from './textLinesReveal';
 import gsap from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
+import Flip from 'gsap/Flip';
+import barba from '@barba/core';
+
+gsap.registerPlugin(ScrollTrigger);
+
+gsap.registerPlugin(Flip);
 // gsap.set('.loader_wrapper', { display: 'flex' });
 
 const loaderTl = gsap.timeline({
@@ -99,3 +106,49 @@ function tween(node) {
 
 document.querySelectorAll(' path,  line,  polyline').forEach(p => tween(p));
 console.log(document.querySelectorAll('#ajaxContent')[0].children);
+
+let catalogColorChange = gsap.timeline({});
+
+catalogColorChange.to('body', {
+  backgroundColor: '#242423',
+  color: '#C4C4C4',
+  duration: 2,
+  ease: 'power4.out',
+});
+
+ScrollTrigger.create({
+  trigger: '.catalog-sec',
+  start: 'top 100px',
+  end: '50px 100px',
+  animation: catalogColorChange,
+  scrub: 1,
+  markers: true,
+});
+
+function resetWebflow(data) {
+  let parser = new DOMParser();
+  let dom = parser.parseFromString(data.next.html, 'text/html');
+  let webflowPageId = $(dom).find('html').attr('data-wf-page');
+  $('html').attr('data-wf-page', webflowPageId);
+  window.Webflow && window.Webflow.destroy();
+  window.Webflow && window.Webflow.ready();
+  // window.Webflow && window.Webflow.require("ix2").init();
+}
+
+barba.init({
+  transitions: [
+    {
+      name: 'opacity-transition',
+      leave(data) {
+        return gsap.to(data.current.container, {
+          opacity: 0,
+        });
+      },
+      enter(data) {
+        return gsap.from(data.next.container, {
+          opacity: 0,
+        });
+      },
+    },
+  ],
+});
